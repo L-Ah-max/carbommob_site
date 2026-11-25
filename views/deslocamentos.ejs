@@ -1,0 +1,156 @@
+<%- include('partials/head') %>
+<%- include('partials/sidebar', { pagina: 'deslocamentos', tituloPagina: 'Deslocamentos' }) %>
+
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">CARBONMOB</span>
+    <h2>Deslocamentos</h2>
+    <p>Registre viagens e acompanhe as emissões geradas.</p>
+  </div>
+</div>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <h3>Novo deslocamento</h3>
+      <p>Informe os dados para calcular uma emissão estimada.</p>
+    </div>
+  </div>
+
+  <% if (sucesso) { %>
+    <p class="form-success">Deslocamento salvo com sucesso!</p>
+  <% } %>
+
+  <form action="/deslocamentos" method="POST" class="form-grid">
+    <div class="field">
+      <label for="origem">Origem</label>
+      <input id="origem" name="origem" placeholder="Ex.: Casa" required>
+    </div>
+
+    <div class="field">
+      <label for="destino">Destino</label>
+      <input id="destino" name="destino" placeholder="Ex.: Escola" required>
+    </div>
+
+    <div class="field">
+      <label for="distancia">Distância (km)</label>
+      <input id="distancia" name="distancia" type="number" min="0.1" step="0.1" required>
+    </div>
+
+    <div class="field">
+      <label for="transporte">Meio de transporte</label>
+      <select
+        id="transporte"
+        name="transporte"
+        onchange="document.getElementById('dadosCombustivel').classList.toggle('hidden', this.value === 'onibus')"
+        required
+      >
+        <option value="carro">Carro</option>
+        <option value="moto">Motocicleta</option>
+        <option value="onibus">Ônibus / transporte público</option>
+      </select>
+    </div>
+
+    <div id="dadosCombustivel" class="field">
+      <label for="combustivel">Combustível</label>
+      <select id="combustivel" name="combustivel">
+        <option value="gasolina">Gasolina</option>
+        <option value="etanol">Etanol</option>
+        <option value="diesel">Diesel</option>
+      </select>
+    </div>
+
+    <div id="dadosConsumo" class="field">
+      <label for="consumo">Consumo (km/L)</label>
+      <input id="consumo" name="consumo" type="number" min="0.1" step="0.1" value="12">
+    </div>
+
+    <div class="field" style="align-self:end">
+      <button class="btn btn-primary" type="submit">Salvar deslocamento</button>
+    </div>
+  </form>
+
+  <p class="muted">
+    Para ônibus, usamos como referência inicial 2,5 km/L, informado pela Transurc para um ônibus convencional em uma linha de Campinas. A ocupação padrão de 30 passageiros é uma hipótese ajustável no arquivo .env. O resultado é por passageiro, não do ônibus inteiro.
+  </p>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <h3>Histórico de deslocamentos</h3>
+      <p>Os registros são exibidos somente para a conta conectada.</p>
+    </div>
+  </div>
+
+  <% if (viagens.length > 0) { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Origem e destino</th>
+            <th>Transporte</th>
+            <th>Distância</th>
+            <th>Emissão</th>
+            <th>Data</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% viagens.forEach((viagem) => { %>
+            <tr>
+              <td>
+                <strong><%= viagem.origem %></strong><br>
+                <span class="muted">até <%= viagem.destino %></span>
+              </td>
+              <td><%= viagem.transporte === 'onibus' ? 'Ônibus' : viagem.transporte %></td>
+              <td><%= Number(viagem.distancia_km).toFixed(1) %> km</td>
+              <td><span class="pill"><%= Number(viagem.emissao_kg).toFixed(2) %> kg</span></td>
+              <td><%= new Date(viagem.criado_em).toLocaleDateString('pt-BR') %></td>
+              <td>
+                <form action="/deslocamentos/<%= viagem.id %>/excluir" method="POST">
+                  <button class="mini-btn" type="submit">Excluir</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="empty-state">
+      <strong>Nenhuma viagem cadastrada</strong>
+      Quando você salvar um deslocamento, ele aparecerá aqui.
+    </div>
+  <% } %>
+</section>
+
+<section class="panel awareness-panel">
+  <div class="panel-head">
+    <div>
+      <h3>Pequenas escolhas fazem a diferença!</h3>
+      <p>Cada trajeto é uma oportunidade de cuidar do meio ambiente.</p>
+    </div>
+  </div>
+
+  <div class="grid quick-grid">
+    <article class="feature-card">
+      <h3>🚲 Vá de bicicleta</h3>
+      <p>Uma opção saudável e sem emissão direta de CO₂ durante o uso.</p>
+    </article>
+
+    <article class="feature-card">
+      <h3>🚶 Caminhe quando puder</h3>
+      <p>Para trajetos curtos, seus passos também ajudam o planeta.</p>
+    </article>
+
+    <article class="feature-card">
+      <h3>🚌 Considere o transporte coletivo</h3>
+      <p>Compartilhar o trajeto pode reduzir a emissão por passageiro.</p>
+    </article>
+  </div>
+
+  <p class="motivational">O futuro mais sustentável começa com as escolhas de hoje. Cada atitude conta!</p>
+</section>
+
+<%- include('partials/footer') %>

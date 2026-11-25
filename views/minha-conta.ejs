@@ -1,0 +1,60 @@
+<%- include('partials/head') %>
+<%- include('partials/sidebar', { pagina: 'minha-conta', tituloPagina: 'Minha conta' }) %>
+
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">CARBONMOB</span>
+    <h2>Minha conta</h2>
+    <p>Confira seus dados de acesso.</p>
+  </div>
+</div>
+
+<section class="panel" style="max-width:700px">
+  <div class="panel-head">
+    <div>
+      <h3>Dados da conta</h3>
+      <p>Informações do usuário conectado.</p>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="field">
+      <label>Nome</label>
+      <input value="<%= usuario.nome %>" disabled>
+    </div>
+
+    <div class="field">
+      <label>E-mail</label>
+      <input value="<%= usuario.email %>" disabled>
+    </div>
+
+    <div class="field">
+      <label>Tipo de conta</label>
+      <input value="<%= usuario.tipo === 'empresa' ? 'Empresa' : 'Pessoa' %>" disabled>
+    </div>
+
+    <% if (usuario.nome_empresa) { %>
+      <div class="field">
+        <label>Empresa</label>
+        <input value="<%= usuario.nome_empresa %>" disabled>
+      </div>
+    <% } %>
+  </div>
+
+  <p class="muted">
+    Para trocar de conta, saia e entre novamente com outro e-mail. Os dados ficam salvos no banco e separados pelo usuário.
+  </p>
+
+  <form action="/sair" method="POST">
+    <button class="btn btn-danger" type="submit">Sair / trocar de conta</button>
+  </form>
+</section>
+
+<section class="panel" style="max-width:700px">
+  <h3>Sobre o sistema</h3>
+  <p class="muted">
+    O CarbonMob utiliza Node.js no servidor, EJS para montar as páginas e MySQL para guardar as contas, os deslocamentos e as operações do mercado de créditos.
+  </p>
+</section>
+
+<%- include('partials/footer') %>

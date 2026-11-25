@@ -1,0 +1,56 @@
+<%- include('partials/head') %>
+
+<main class="auth-shell">
+  <section class="auth-panel">
+    <div class="auth-card">
+      <div class="login-brand">
+        <div class="brand-mark">C</div>
+        <h1>CarbonMob</h1>
+        <p>Crie seu acesso</p>
+      </div>
+
+      <span class="eyebrow">COMECE AGORA</span>
+      <h2>Criar conta</h2>
+      <p class="muted">Escolha como deseja participar do CarbonMob.</p>
+
+      <% if (erro) { %>
+        <p class="form-error"><%= erro %></p>
+      <% } %>
+
+      <form action="/cadastro" method="POST">
+        <label for="nome">Nome completo ou responsável</label>
+        <input id="nome" name="nome" required>
+
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" required>
+
+        <label for="tipo">Tipo de conta</label>
+        <select
+          id="tipo"
+          name="tipo"
+          onchange="document.getElementById('campoEmpresa').classList.toggle('hidden', this.value !== 'empresa')"
+        >
+          <option value="pessoa">Pessoa / comprador</option>
+          <option value="empresa">Empresa / compradora e vendedora</option>
+        </select>
+
+        <div id="campoEmpresa" class="hidden">
+          <label for="empresa">Nome da empresa</label>
+          <input id="empresa" name="empresa">
+        </div>
+
+        <label for="senha">Senha (mínimo de 8 caracteres)</label>
+        <input id="senha" name="senha" type="password" minlength="8" required>
+
+        <button class="btn btn-primary full" type="submit">Criar conta</button>
+      </form>
+
+      <p class="auth-switch">
+        Já possui uma conta? <a class="text-button" href="/login">Voltar ao login</a>
+      </p>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

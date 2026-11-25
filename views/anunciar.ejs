@@ -1,0 +1,64 @@
+<%- include('partials/head') %>
+<%- include('partials/sidebar', { pagina: 'creditos', tituloPagina: 'Anunciar créditos' }) %>
+
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">ÁREA DA EMPRESA</span>
+    <h2>Anunciar créditos</h2>
+    <p>Cadastre um projeto para disponibilizar créditos no mercado demonstrativo.</p>
+  </div>
+</div>
+
+<section class="panel">
+  <% if (erro) { %>
+    <p class="form-error"><%= erro %></p>
+  <% } %>
+
+  <form action="/creditos/anunciar" method="POST" class="form-grid">
+    <div class="field">
+      <label for="projeto">Nome do projeto</label>
+      <input id="projeto" name="projeto" required>
+    </div>
+
+    <div class="field">
+      <label for="categoria">Categoria</label>
+      <select id="categoria" name="categoria" required>
+        <option value="Reflorestamento">Reflorestamento</option>
+        <option value="Energia renovável">Energia renovável</option>
+        <option value="Preservação florestal">Preservação florestal</option>
+        <option value="Agricultura regenerativa">Agricultura regenerativa</option>
+        <option value="Redução de emissões">Redução de emissões</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="quantidade">Quantidade de créditos</label>
+      <input id="quantidade" name="quantidade" type="number" min="1" required>
+    </div>
+
+    <div class="field">
+      <label for="preco">Preço por crédito (R$)</label>
+      <input id="preco" name="preco" type="number" min="0.01" step="0.01" required>
+    </div>
+
+    <div class="field">
+      <label for="compensacao">CO₂ compensado por unidade (kg)</label>
+      <input id="compensacao" name="compensacao" type="number" min="0.01" step="0.01" value="100" required>
+    </div>
+
+    <div class="field">
+      <label for="descricao">Descrição do projeto</label>
+      <textarea id="descricao" name="descricao" rows="4" required></textarea>
+    </div>
+
+    <div class="field" style="align-self:end">
+      <button class="btn btn-primary" type="submit">Publicar anúncio</button>
+    </div>
+  </form>
+
+  <p class="muted">
+    Para a apresentação escolar, os anúncios são demonstrativos. Uma plataforma real precisaria validar a certificação e a titularidade dos créditos.
+  </p>
+</section>
+
+<%- include('partials/footer') %>

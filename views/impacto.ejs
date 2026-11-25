@@ -1,0 +1,68 @@
+<%- include('partials/head') %>
+<%- include('partials/sidebar', { pagina: 'impacto', tituloPagina: 'Meu impacto' }) %>
+
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">CARBONMOB</span>
+    <h2>Meu impacto</h2>
+    <p>Acompanhe suas emissões e suas metas ambientais.</p>
+  </div>
+</div>
+
+<div class="grid stats-grid">
+  <article class="stat-card">
+    <div class="stat-label">Emissão registrada</div>
+    <div class="stat-value"><%= Number(resumo.emissao).toFixed(2) %> kg</div>
+    <div class="stat-foot">Soma dos seus deslocamentos</div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-label">Deslocamentos</div>
+    <div class="stat-value"><%= resumo.quantidade %></div>
+    <div class="stat-foot">Viagens registradas</div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-label">CO₂ compensado</div>
+    <div class="stat-value"><%= Number(compensado).toFixed(2) %> kg</div>
+    <div class="stat-foot">Créditos utilizados</div>
+  </article>
+</div>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <h3>Meta mensal</h3>
+      <p>Defina um limite pessoal de emissões para este mês.</p>
+    </div>
+  </div>
+
+  <% if (sucesso) { %>
+    <p class="form-success">Meta atualizada!</p>
+  <% } %>
+
+  <form action="/impacto/meta" method="POST" class="form-actions">
+    <div class="field" style="width:min(280px,100%)">
+      <label for="limite">Meta de emissão (kg CO₂)</label>
+      <input
+        id="limite"
+        name="limite"
+        type="number"
+        min="0.1"
+        step="0.1"
+        value="<%= meta || '' %>"
+        required
+      >
+    </div>
+
+    <button class="btn btn-primary" type="submit">Salvar meta</button>
+  </form>
+
+  <% if (meta) { %>
+    <p class="muted">
+      Meta definida: <strong><%= Number(meta).toFixed(2) %> kg</strong>. O total acumulado registrado é de <strong><%= Number(resumo.emissao).toFixed(2) %> kg</strong>.
+    </p>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

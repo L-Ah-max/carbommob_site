@@ -1,0 +1,124 @@
+<%- include('partials/head') %>
+<%- include('partials/sidebar', { pagina: 'painel', tituloPagina: 'Visão geral' }) %>
+
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">CARBONMOB</span>
+    <h2>Olá, <%= usuario.nome.split(' ')[0] %></h2>
+    <p>Acompanhe seus dados e veja como suas escolhas impactam o meio ambiente.</p>
+  </div>
+  <div class="heading-actions">
+    <a class="btn btn-primary" href="/deslocamentos">+ Novo deslocamento</a>
+  </div>
+</div>
+
+<div class="grid stats-grid">
+  <article class="stat-card">
+    <div class="stat-top">
+      <span class="stat-label">Emissão acumulada</span>
+      <span class="stat-icon">◉</span>
+    </div>
+    <div class="stat-value"><%= Number(totais.emissao).toFixed(2).replace('.', ',') %> kg</div>
+    <div class="stat-foot">Total registrado na sua conta</div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-top">
+      <span class="stat-label">Deslocamentos</span>
+      <span class="stat-icon">↗</span>
+    </div>
+    <div class="stat-value"><%= totais.quantidade %></div>
+    <div class="stat-foot">Registros realizados</div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-top">
+      <span class="stat-label">Créditos adquiridos</span>
+      <span class="stat-icon">◇</span>
+    </div>
+    <div class="stat-value"><%= creditosComprados %></div>
+    <div class="stat-foot">Unidades compradas</div>
+  </article>
+</div>
+
+<div class="grid dashboard-grid">
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h3>Deslocamentos recentes</h3>
+        <p>Seus últimos registros de mobilidade</p>
+      </div>
+      <a class="mini-btn" href="/deslocamentos">Ver histórico</a>
+    </div>
+
+    <% if (viagens.length > 0) { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Trajeto</th>
+              <th>Transporte</th>
+              <th>Distância</th>
+              <th>Emissão</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% viagens.forEach((viagem) => { %>
+              <tr>
+                <td>
+                  <strong><%= viagem.origem %></strong><br>
+                  <span class="muted">até <%= viagem.destino %></span>
+                </td>
+                <td><%= viagem.transporte === 'onibus' ? 'Ônibus' : viagem.transporte %></td>
+                <td><%= Number(viagem.distancia_km).toFixed(1) %> km</td>
+                <td><span class="pill"><%= Number(viagem.emissao_kg).toFixed(2) %> kg</span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <strong>Nenhum deslocamento registrado</strong>
+        Adicione sua primeira viagem para acompanhar suas emissões.
+      </div>
+    <% } %>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h3>Acesso rápido</h3>
+        <p>O que você deseja fazer?</p>
+      </div>
+    </div>
+
+    <div class="grid quick-grid">
+      <a class="quick-action" href="/deslocamentos">
+        <span>↗</span>
+        <strong>Novo deslocamento</strong>
+        <small>Registre uma viagem</small>
+      </a>
+
+      <a class="quick-action" href="/comparar">
+        <span>⇄</span>
+        <strong>Comparar transportes</strong>
+        <small>Compare carro e moto</small>
+      </a>
+
+      <a class="quick-action" href="/creditos">
+        <span>◇</span>
+        <strong>Mercado de créditos</strong>
+        <small>Veja os projetos</small>
+      </a>
+
+      <a class="quick-action" href="/meus-creditos">
+        <span>▤</span>
+        <strong>Minhas operações</strong>
+        <small>Compras e vendas</small>
+      </a>
+    </div>
+  </section>
+</div>
+
+<%- include('partials/footer') %>

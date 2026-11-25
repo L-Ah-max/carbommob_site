@@ -1,0 +1,50 @@
+<div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand-lockup sidebar-brand">
+            <span class="brand-mark">C</span>
+            <span>CarbonMob</span>
+        </div>
+
+        <div class="side-caption">MENU PRINCIPAL</div>
+
+        <nav class="nav-list">
+            <a class="nav-item <%= pagina === 'painel' ? 'active' : '' %>" href="/painel">⌂ Visão geral</a>
+            <a class="nav-item <%= pagina === 'deslocamentos' ? 'active' : '' %>" href="/deslocamentos">↗ Deslocamentos</a>
+            <a class="nav-item <%= pagina === 'impacto' ? 'active' : '' %>" href="/impacto">◉ Meu impacto</a>
+            <a class="nav-item <%= pagina === 'comparar' ? 'active' : '' %>" href="/comparar">⇄ Comparar transportes</a>
+            <a class="nav-item <%= pagina === 'creditos' ? 'active' : '' %>" href="/creditos">◇ Mercado de créditos</a>
+            <a class="nav-item <%= pagina === 'meus-creditos' ? 'active' : '' %>" href="/meus-creditos">▤ Meus créditos</a>
+            <a class="nav-item <%= pagina === 'minha-conta' ? 'active' : '' %>" href="/minha-conta">○ Minha conta</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="side-tip">
+                <span class="tip-dot"></span>
+                <div>
+                    <strong>Mobilidade consciente</strong>
+                    <p>Cada escolha faz diferença.</p>
+                </div>
+            </div>
+            <form action="/sair" method="POST">
+                <button class="nav-item logout-nav" type="submit">↪ Sair da conta</button>
+            </form>
+        </div>
+    </aside>
+
+    <section class="main-area">
+        <header class="topbar">
+            <div class="breadcrumb">
+                <span>CarbonMob</span>
+                <b>/</b>
+                <strong><%= tituloPagina %></strong>
+            </div>
+            <div class="top-user">
+                <div class="avatar"><%= usuario.nome.charAt(0).toUpperCase() %></div>
+                <div>
+                    <strong><%= usuario.nome %></strong>
+                    <small><%= usuario.tipo === 'empresa' ? 'Conta empresarial' : 'Conta pessoal' %></small>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">

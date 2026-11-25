@@ -1,0 +1,79 @@
+<%- include('partials/head') %>
+
+<main class="auth-shell login-page">
+    <section class="auth-panel login-panel">
+        <div class="auth-card login-card">
+
+            <div class="login-brand">
+                <div class="brand-mark">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M47 9C27 10 13 22 14 39c1 11 9 17 18 15
+                        C45 51 51 32 47 9Z" fill="#3b754b"/>
+                        <path d="M20 46C29 32 35 25 44 15"
+                        fill="none" stroke="#eaf5e9"
+                        stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div>
+
+                <h1>CarbonMob</h1>
+                <p>Mobilidade sustentável</p>
+            </div>
+
+            <span class="eyebrow">BEM-VINDO DE VOLTA</span>
+
+            <h2>Acesse sua conta</h2>
+
+            <p class="muted">
+                Entre para acompanhar sua mobilidade sustentável.
+            </p>
+
+            <% if (erro) { %>
+                <p class="form-error"><%= erro %></p>
+            <% } %>
+
+            <form action="/login" method="POST">
+
+                <label for="email">E-mail</label>
+
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="senha">Senha</label>
+
+                <input
+                    id="senha"
+                    name="senha"
+                    type="password"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button class="btn btn-primary full login-button"
+                    type="submit">
+                    Entrar
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                Ainda não tem uma conta?
+                <a class="text-button" href="/cadastro">Criar conta</a>
+            </p>
+
+            <p class="local-note">
+                Projeto acadêmico · Node.js + EJS + MySQL
+            </p>
+
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

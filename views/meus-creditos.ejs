@@ -1,0 +1,195 @@
+<%- include('partials/head') %>
+<%- include('partials/sidebar', { pagina: 'meus-creditos', tituloPagina: 'Meus créditos' }) %>
+
+<div class="page-heading">
+    <div>
+        <span class="eyebrow">CARBONMOB</span>
+        <h2>Minhas operações</h2>
+        <p>Acompanhe suas compras, anúncios e vendas.</p>
+    </div>
+</div>
+
+<% if (avisoAnuncio) { %>
+    <p class="form-success">Anúncio cadastrado no mercado!</p>
+<% } %>
+
+<section class="panel">
+    <div class="panel-head">
+        <div>
+            <h3>Minhas compras</h3>
+            <p>Créditos adquiridos pela conta conectada.</p>
+        </div>
+    </div>
+
+    <% if (compras.length > 0) { %>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Projeto</th>
+                        <th>Quantidade</th>
+                        <th>Valor total</th>
+                        <th>Data</th>
+                        <th>Compensar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% compras.forEach((compra) => { %>
+                        <tr>
+                            <td><%= compra.projeto %></td>
+                            <td><%= compra.quantidade %></td>
+                            <td>R$ <%= Number(compra.valor_total).toFixed(2).replace('.', ',') %></td>
+                            <td><%= new Date(compra.criado_em).toLocaleDateString('pt-BR') %></td>
+                            <td>
+                                <form action="/compras/<%= compra.id %>/compensar" method="POST" class="buy-form">
+                                    <input
+                                        name="quantidade"
+                                        type="number"
+                                        min="1"
+                                        max="<%= compra.quantidade - Number(compra.quantidade_usada) %>"
+                                        value="1"
+                                        <%= compra.quantidade - Number(compra.quantidade_usada) < 1 ? 'disabled' : '' %>
+                                        required
+                                    >
+                                    <button class="mini-btn" type="submit"
+                                        <%= compra.quantidade - Number(compra.quantidade_usada) < 1 ? 'disabled' : '' %>>
+                                        Usar créditos
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <div class="empty-state">
+            <strong>Você ainda não comprou créditos</strong>
+            Os registros de compra aparecerão aqui.
+        </div>
+    <% } %>
+</section>
+
+<% if (usuario.tipo === 'empresa') { %>
+    <section class="panel">
+        <div class="panel-head">
+            <div>
+                <h3>Meus anúncios</h3>
+                <p>Créditos cadastrados pela empresa.</p>
+            </div>
+            <a class="btn btn-primary" href="/creditos/anunciar">+ Novo anúncio</a>
+        </div>
+
+        <% if (anuncios.length > 0) { %>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Projeto</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Disponíveis</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% anuncios.forEach((anuncio) => { %>
+                            <tr>
+                                <td><%= anuncio.projeto %></td>
+                                <td><%= anuncio.categoria %></td>
+                                <td>R$ <%= Number(anuncio.preco).toFixed(2).replace('.', ',') %></td>
+                                <td><%= anuncio.quantidade_disponivel %></td>
+                                <td><%= anuncio.status %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                <strong>Nenhum anúncio cadastrado</strong>
+                Publique um projeto para começar a disponibilizar créditos.
+            </div>
+        <% } %>
+    </section>
+
+    <section class="panel">
+        <div class="panel-head">
+            <div>
+                <h3>Vendas realizadas</h3>
+                <p>Compras feitas por outros usuários nos seus anúncios.</p>
+            </div>
+        </div>
+
+        <% if (vendas.length > 0) { %>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Projeto</th>
+                            <th>Quantidade</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% vendas.forEach((venda) => { %>
+                            <tr>
+                                <td><%= venda.projeto %></td>
+                                <td><%= venda.quantidade %></td>
+                                <td>R$ <%= Number(venda.valor_total).toFixed(2).replace('.', ',') %></td>
+                                <td><%= new Date(venda.criado_em).toLocaleDateString('pt-BR') %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                <strong>Nenhuma venda realizada</strong>
+                Quando alguém comprar seus créditos, a operação aparecerá aqui.
+            </div>
+        <% } %>
+    </section>
+<% } %>
+
+<section class="panel">
+    <div class="panel-head">
+        <div>
+            <h3>Histórico de compensações</h3>
+            <p>Créditos que você já utilizou para compensar emissões.</p>
+        </div>
+    </div>
+
+    <% if (compensacoes.length > 0) { %>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Projeto</th>
+                        <th>Créditos utilizados</th>
+                        <th>CO₂ compensado</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% compensacoes.forEach((compensacao) => { %>
+                        <tr>
+                            <td><%= compensacao.projeto %></td>
+                            <td><%= compensacao.quantidade %></td>
+                            <td><%= Number(compensacao.co2_compensado || 0).toFixed(2).replace('.', ',') %> kg</td>
+                            <td><%= new Date(compensacao.criado_em).toLocaleDateString('pt-BR') %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <div class="empty-state">
+            <strong>Nenhuma compensação registrada</strong>
+            Quando você utilizar seus créditos, o histórico aparecerá aqui.
+        </div>
+    <% } %>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,192 @@
+<%- include('partials/head') %>
+<%- include('partials/sidebar', { pagina: 'comparar', tituloPagina: 'Comparar transportes' }) %>
+
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">CARBONMOB</span>
+    <h2>Comparar transportes</h2>
+    <p>Compare carro e motocicleta para o mesmo trajeto.</p>
+  </div>
+</div>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <h3>Dados da comparação</h3>
+      <p>Informe o consumo de cada veículo. Os valores podem ser diferentes.</p>
+    </div>
+  </div>
+
+  <% if (erro) { %>
+    <p class="form-error"><%= erro %></p>
+  <% } %>
+
+  <form action="/comparar" method="POST" class="form-grid">
+    <div class="field">
+      <label for="distancia">Distância do trajeto (km)</label>
+      <input
+        id="distancia"
+        name="distancia"
+        type="number"
+        min="0.1"
+        step="0.1"
+        value="<%= valores ? valores.distancia : 10 %>"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="passageiros_carro">Pessoas no carro (1 a 5)</label>
+      <input
+        id="passageiros_carro"
+        name="passageiros_carro"
+        type="number"
+        min="1"
+        max="5"
+        value="<%= valores ? valores.passageiros_carro : 1 %>"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="carro_combustivel">Combustível do carro</label>
+      <select id="carro_combustivel" name="carro_combustivel">
+        <% Object.keys(fatores).forEach((item) => { %>
+          <option value="<%= item %>" <%= valores && valores.carro_combustivel === item ? 'selected' : '' %>>
+            <%= nomesCombustivel[item] %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="carro_consumo">Consumo do carro (km/L)</label>
+      <input
+        id="carro_consumo"
+        name="carro_consumo"
+        type="number"
+        min="0.1"
+        step="0.1"
+        value="<%= valores ? valores.carro_consumo : 12 %>"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="passageiros_moto">Pessoas na moto (1 ou 2)</label>
+      <input
+        id="passageiros_moto"
+        name="passageiros_moto"
+        type="number"
+        min="1"
+        max="2"
+        value="<%= valores ? valores.passageiros_moto : 1 %>"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="moto_combustivel">Combustível da moto</label>
+      <select id="moto_combustivel" name="moto_combustivel">
+        <% ['gasolina', 'etanol'].forEach((item) => { %>
+          <option value="<%= item %>" <%= valores && valores.moto_combustivel === item ? 'selected' : '' %>>
+            <%= nomesCombustivel[item] %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="moto_consumo">Consumo da moto (km/L)</label>
+      <input
+        id="moto_consumo"
+        name="moto_consumo"
+        type="number"
+        min="0.1"
+        step="0.1"
+        value="<%= valores ? valores.moto_consumo : 30 %>"
+        required
+      >
+    </div>
+
+    <div class="field" style="align-self:end">
+      <button class="btn btn-primary" type="submit">Comparar opções</button>
+    </div>
+  </form>
+</section>
+
+<% if (resultado) { %>
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h3>Resultado para <%= resultado.distancia %> km</h3>
+        <p>O sistema apresenta a emissão total e a estimativa por pessoa.</p>
+      </div>
+    </div>
+
+    <div class="grid stats-grid">
+      <article class="stat-card">
+        <div class="stat-label">Carro · total</div>
+        <div class="stat-value"><%= resultado.emissaoCarro.toFixed(2) %> kg</div>
+        <div class="stat-foot">CO₂ estimado no trajeto</div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-label">Motocicleta · total</div>
+        <div class="stat-value"><%= resultado.emissaoMoto.toFixed(2) %> kg</div>
+        <div class="stat-foot">CO₂ estimado no trajeto</div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-label">Carro · por pessoa</div>
+        <div class="stat-value"><%= resultado.porPessoaCarro.toFixed(2) %> kg</div>
+        <div class="stat-foot">Considerando os ocupantes informados</div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-label">Moto · por pessoa</div>
+        <div class="stat-value"><%= resultado.porPessoaMoto.toFixed(2) %> kg</div>
+        <div class="stat-foot">Considerando os ocupantes informados</div>
+      </article>
+    </div>
+
+    <div class="recommendation">
+      <strong>Resultado da comparação</strong>
+      <p><%= resultado.recomendacao %></p>
+    </div>
+
+    <p class="muted">
+      A recomendação considera somente a estimativa de CO₂ por pessoa. Segurança, condições do trajeto e outros fatores também devem ser avaliados.
+    </p>
+  </section>
+<% } %>
+
+<section class="panel awareness-panel">
+  <div class="panel-head">
+    <div>
+      <h3>Pequenas escolhas fazem a diferença!</h3>
+      <p>Sempre que possível, considere alternativas mais sustentáveis.</p>
+    </div>
+  </div>
+
+  <div class="grid quick-grid">
+    <article class="feature-card">
+      <h3>🚲 Vá de bicicleta</h3>
+      <p>Uma opção saudável e sem emissão direta de CO₂ durante o uso.</p>
+    </article>
+
+    <article class="feature-card">
+      <h3>🚶 Caminhe quando puder</h3>
+      <p>Para trajetos curtos, seus passos também ajudam o planeta.</p>
+    </article>
+
+    <article class="feature-card">
+      <h3>🚌 Considere o transporte coletivo</h3>
+      <p>Compartilhar o trajeto pode reduzir a emissão por passageiro.</p>
+    </article>
+  </div>
+
+  <p class="motivational">O futuro mais sustentável começa com as escolhas de hoje. Cada atitude conta!</p>
+</section>
+
+<%- include('partials/footer') %>
